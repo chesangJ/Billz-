@@ -8,10 +8,12 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.widget.Toast
 import androidx.activity.viewModels
+import androidx.lifecycle.ViewModel
 import com.kevine.billzapplication.databinding.ActivityLoginactivityBinding
 import com.kevine.billzapplication.model.LoginRequest
 import com.kevine.billzapplication.model.LoginResponse
 import com.kevine.billzapplication.utils.Constants
+import com.kevine.billzapplication.viewmodel.BillsViewModel
 import com.kevine.billzapplication.viewmodel.UserViewModel
 
 class Loginactivity : AppCompatActivity() {
@@ -104,6 +106,7 @@ class Loginactivity : AppCompatActivity() {
     fun initobserver() {
         userViewModel.regLiveDataLogin.observe(this) { loginResponse ->
             persistlogin(loginResponse)
+
             //            binding.pblogin.visibility = View.GONe
             Toast.makeText(this, loginResponse.message, Toast.LENGTH_LONG).show()
             startActivity(Intent(this@Loginactivity, HomeActivity::class.java))

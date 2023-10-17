@@ -22,7 +22,7 @@ class DateTimeUtils {
         }
         fun getFirstDayOfWeek():String{
             val now = LocalDateTime.now()
-          val first=  now.with(previousOrSame(MONDAY))
+           val first =  now.with(previousOrSame(MONDAY))
             return  formatDate(first)
 
         }

@@ -1,5 +1,6 @@
 package com.kevine.billzapplication.repository
 
+import android.content.Context
 import androidx.lifecycle.LiveData
 import com.kevine.billzapplication.BillzApp
 import com.kevine.billzapplication.Database.BillsDb
@@ -141,12 +142,20 @@ class BillsRepo {
     fun getPaidBills():LiveData<List<UpcomingBill>>{
         return upcomingBillsDao.getPaidBills()
     }
+   fun getAccessToken():String{
+       val prefs = BillzApp.appContext.getSharedPreferences(Constants.PREFS,Context.MODE_PRIVATE)
+       var token = prefs.getString(Constants.ACCESS_TOKEN, "")?: ""
+       token = "Bearer $token"
+       return token
+   }
 
     suspend fun syncBills(){
         withContext(Dispatchers.IO){
+
+            val accessToken= getAccessToken()
             val unsyncedBills=billsDao.getUnsyncedBills()
             unsyncedBills.forEach {bill->
-            val response= apiClient.postBill(bill)
+            val response= apiClient.postBill(accessToken,bill)
             if (response.isSuccessful){
                 bill.synced=true
                 billsDao.insertBill(bill)
@@ -155,11 +164,12 @@ class BillsRepo {
             }
         }
     }
-
+//sync upcoming bills
     suspend fun syncUpcomingBills(){
         withContext(Dispatchers.IO){
+            val accessToken= getAccessToken()
             upcomingBillsDao.getUnsyncedUpcomingBills().forEach { upcomingBill ->
-                val response=apiClient.postUpcomingBill(upcomingBill)
+                val response=apiClient.postUpcomingBill(accessToken,upcomingBill)
                 if (response.isSuccessful){
                     upcomingBill.synced=true
                     upcomingBillsDao.updateUpcomingBill(upcomingBill)
@@ -169,3 +179,4 @@ class BillsRepo {
         }
     }
 }
+//fetchUpcoming Remote Bills

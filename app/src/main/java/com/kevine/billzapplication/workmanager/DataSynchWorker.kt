@@ -5,7 +5,7 @@ import android.content.ContextParams
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
 import com.kevine.billzapplication.repository.BillsRepo
-
+//when you schedule
 class DataSynchWorker(context: Context, workerParams: WorkerParameters):
 CoroutineWorker(context,workerParams){
     val billsRepo= BillsRepo()
